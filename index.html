@@ -452,9 +452,9 @@
         <label>メモ</label>
         <textarea id="memo" placeholder="型番・状態・ジャンク理由など" rows="2"></textarea>
       </div>
-      <button class="btn-add" id="btnAdd" type="button" onclick="addItem()">追加する</button>
     </div>
   </div>
+  <button class="btn-add" id="btnAdd" type="button" onclick="addItem()" style="display:none">追加する</button>
   <div class="list-header">
     <div class="list-title">📦 商品一覧（<span id="listCount">0</span>点）</div>
     <div class="list-btns">
@@ -951,11 +951,14 @@ function liveCalc() {
 }
 
 function toggleForm() {
-  document.getElementById('formBody').classList.toggle('collapsed');
-  document.getElementById('formArrow').classList.toggle('closed');
-  updateAddBar();
+  const collapsed = document.getElementById('formBody').classList.toggle('collapsed');
+  document.getElementById('formArrow').classList.toggle('closed', collapsed);
+  document.getElementById('btnAdd').style.display = collapsed ? 'none' : 'block';
 }
-function updateAddBar() {}
+function updateAddBar() {
+  const collapsed = document.getElementById('formBody').classList.contains('collapsed');
+  document.getElementById('btnAdd').style.display = collapsed ? 'none' : 'block';
+}
 
 function formatDate(dateStr) { if (!dateStr) return ''; const d = new Date(dateStr+'T00:00:00'); return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate(); }
 function dayOfWeek(dateStr) { const days=['日','月','火','水','木','金','土']; return days[new Date(dateStr+'T00:00:00').getDay()]; }
@@ -1015,6 +1018,7 @@ function clearForm() {
   pEl.textContent = '¥—'; pEl.style.color = '#8b98a5';
   document.getElementById('formBody').classList.add('collapsed');
   document.getElementById('formArrow').classList.add('closed');
+  document.getElementById('btnAdd').style.display = 'none';
   uploadedImages = []; renderPhotos(); updateScanBtn();
   aiResults = []; renderAiResults();
   editIndex = -1;
